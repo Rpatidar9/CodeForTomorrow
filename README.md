@@ -1,4 +1,6 @@
-Categories and Services Management API
+            CODE FOR TOMORROW TASK
+
+User Authentication ,Categories and Services Management API
 
 Overview
 Categories and Services Management API is a RESTful API built using Node.js, Express, Sequelize, and MySQL. The API supports JWT token-based authentication and allows users to perform CRUD operations on categories and services, including managing service price options. All endpoints, except login, require a valid JWT token.
