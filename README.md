@@ -1,61 +1,254 @@
-# REST API using Node.js, Express, Sequelize and MySQL + JWT Authentication and Authorization
+Categories and Services Management API
+Overview
+Categories and Services Management API is a RESTful API built using Node.js, Express, Sequelize, and MySQL. The API supports JWT token-based authentication and allows users to perform CRUD operations on categories and services. The API also includes endpoints for managing service price options and supports full documentation via Postman.
 
-## Getting Started
+Features
+JWT token-based login
+Create, read, update, and delete categories
+Create, read, update, and delete services within categories
+Add, remove, and update price options for services
+Valid JWT token required for all endpoints except login
+Tech Stack
+Node.js: JavaScript runtime for server-side programming
+Express: Web application framework for Node.js
+Sequelize: Promise-based Node.js ORM for MySQL
+MySQL: Relational database management system
+JWT: JSON Web Token for secure authentication
+Installation
+Prerequisites
+Node.js (v12 or higher)
+npm (v6 or higher)
+MySQL (v5.7 or higher)
+Steps
+Clone the repository
 
-1. Clone this repository
+sh
+Copy code
+git clone https://github.com/yourusername/your-repo-name.git
+cd your-repo-name
+Install dependencies
 
-   ```bash
-   git clone https://github.com/indraarianggi/nodejs-sequelize-mysql-api.git
-   cd nodejs-sequelize-mysql-api
-   ```
+sh
+Copy code
+npm install
+Configure the database connection in config/config.js with your MySQL credentials.
 
-2. Install the npm packages
+Start the server
 
-   ```bash
-   npm install
-   ```
+sh
+Copy code
+npm run dev
+This will start the server on port 8000.
 
-   Also install `nodemon` globally, if you don't have it yet.
+Usage
+Authentication
+Login
+Endpoint: POST /api/auth/signin
 
-   ```bash
-   npm install -g nodemon
-   ```
+Request body:
 
-3. Congfigure environment settings
+json
+Copy code
+{
+  "username": "admin",
+  "password": "Admin123!@#"
+}
+Response:
 
-   Create a file with the following name and location `.env` and copy the contents from `.env.example` into it. Replace the values with your specific configuration. Don't worry, this file is in the `.gitignore` so it won't get pushed to github.
+json
+Copy code
+{
+  "id": 1,
+  "username": "admin",
+  "accessToken": "your.jwt.token"
+}
+Category Management
+Create a category
 
-   ```javasscript
-    NODE_ENV=development
-    PORT=8080
+Endpoint: POST /api/category/create
 
-    # Database
-    DB_HOST=your-db-host
-    DB_USER=your-db-username
-    DB_PASS=your-db-password
-    DB_NAME=your-db-name
-   ```
+Headers:
 
-4. Running the app locally
+sh
+Copy code
+Authorization: Bearer your.jwt.token
+Content-Type: application/json
+Request body:
 
-   Run this command, which is located in npm script in `package.json` file.
+json
+Copy code
+{
+  "name": "food"
+}
+cURL Example:
 
-   ```bash
-   npm run dev
-   ```
+sh
+Copy code
+curl --location 'http://localhost:8000/api/category/create' \
+--header 'Authorization: Bearer your.jwt.token' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "food"
+}'
+Get all categories
 
-## Resources
+Endpoint: GET /api/categories
+Headers:
+sh
+Copy code
+Authorization: Bearer your.jwt.token
+cURL Example:
+sh
+Copy code
+curl --location 'http://localhost:8000/api/categories' \
+--header 'Authorization: Bearer your.jwt.token'
+Update a category
 
-1. [Node.js Rest APIs example with Express, Sequelize & MySQL](https://bezkoder.com/node-js-express-sequelize-mysql/)
+Endpoint: PUT /api/category/:categoryId
 
-2. [Node.js – JWT Authentication & Authorization with JSONWebToken example](https://bezkoder.com/node-js-jwt-authentication-mysql/)
+Headers:
 
-3. [In-depth Introduction to JWT-JSON Web Token](https://bezkoder.com/jwt-json-web-token/)
+sh
+Copy code
+Authorization: Bearer your.jwt.token
+Content-Type: application/json
+Request body:
 
-4. [Sequelize Documentation](https://sequelize.org/master/)
+json
+Copy code
+{
+  "name": "Updated Category Name"
+}
+cURL Example:
 
-5. [Getting Started with Node, Express and Mysql Using Sequelize](https://medium.com/@prajramesh93/getting-started-with-node-express-and-mysql-using-sequelize-ed1225afc3e0)
+sh
+Copy code
+curl --location --request PUT 'http://localhost:8000/api/category/1' \
+--header 'Authorization: Bearer your.jwt.token' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Updated Category Name"
+}'
+Delete an empty category
 
-6. [Hidup Mudah dengan Sequelize: ORM Untuk Aplikasi NodeJS](https://refactory.id/post/91-hidup-mudah-dengan-sequelize-orm-untuk-aplikasi-nodejs)
+Endpoint: DELETE /api/category/:categoryId
+Headers:
+sh
+Copy code
+Authorization: Bearer your.jwt.token
+cURL Example:
+sh
+Copy code
+curl --location --request DELETE 'http://localhost:8000/api/category/1' \
+--header 'Authorization: Bearer your.jwt.token'
+Service Management
+Create a service in a category
 
-7. [Node.js Everywhere with Environment Variables!](https://medium.com/the-node-js-collection/making-your-node-js-work-everywhere-with-environment-variables-2da8cdf6e786)
+Endpoint: POST /api/category/:categoryId/service
+
+Headers:
+
+sh
+Copy code
+Authorization: Bearer your.jwt.token
+Content-Type: application/json
+Request body:
+
+json
+Copy code
+{
+  "name": "Service Name",
+  "type": "Normal",
+  "priceOptions": [
+    {
+      "duration": "Hourly",
+      "price": 50,
+      "type": "Hourly"
+    }
+  ]
+}
+cURL Example:
+
+sh
+Copy code
+curl --location 'http://localhost:8000/api/category/1/service' \
+--header 'Authorization: Bearer your.jwt.token' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Service Name",
+    "type": "Normal",
+    "priceOptions": [
+        {
+            "duration": "Hourly",
+            "price": 50,
+            "type": "Hourly"
+        }
+    ]
+}'
+Get all services in a category
+
+Endpoint: GET /api/category/:categoryId/services
+Headers:
+sh
+Copy code
+Authorization: Bearer your.jwt.token
+cURL Example:
+sh
+Copy code
+curl --location 'http://localhost:8000/api/category/1/services' \
+--header 'Authorization: Bearer your.jwt.token'
+Update a service
+
+Endpoint: PUT /api/category/:categoryId/service/:serviceId
+
+Headers:
+
+sh
+Copy code
+Authorization: Bearer your.jwt.token
+Content-Type: application/json
+Request body:
+
+json
+Copy code
+{
+  "name": "Updated Service Name",
+  "type": "VIP",
+  "priceOptions": [
+    {
+      "duration": "Weekly",
+      "price": 300,
+      "type": "Weekly"
+    }
+  ]
+}
+cURL Example:
+
+sh
+Copy code
+curl --location --request PUT 'http://localhost:8000/api/category/1/service/1' \
+--header 'Authorization: Bearer your.jwt.token' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Updated Service Name",
+    "type": "VIP",
+    "priceOptions": [
+        {
+            "duration": "Weekly",
+            "price": 300,
+            "type": "Weekly"
+        }
+    ]
+}'
+Delete a service from a category
+
+Endpoint: DELETE /api/category/:categoryId/service/:serviceId
+Headers:
+sh
+Copy code
+Authorization: Bearer your.jwt.token
+cURL Example:
+sh
+Copy code
+curl --location --request DELETE 'http://localhost:8000/api/category/1/service/1' \
+--header 'Authorization: Bearer your.jwt.token'
